@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('travelers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('traveller_name');
+            $table->string('traveller_name')->nullable(false);
         });
     }
 
