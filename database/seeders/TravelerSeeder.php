@@ -29,7 +29,7 @@ class TravellerSeeder extends Seeder
         ];
 
         foreach($traveller_data as $data) {
-            Traveller::create($data);
+            Traveler::create($data);
         }
 
         $this->command->info('End Traveller Seeder');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\CityTravelHistory;
-use App\Models\Traveller;
+use App\Models\Traveler;
 use Carbon\Carbon;
 
 class CityTravelHistoryController extends Controller
@@ -31,7 +31,7 @@ class CityTravelHistoryController extends Controller
             ]);
         }
 
-        $traveller = Traveller::where('id', $user_id);
+        $traveller = Traveler::where('id', $user_id);
 
         if(!$traveller->exists()) {
             return response()->json([
