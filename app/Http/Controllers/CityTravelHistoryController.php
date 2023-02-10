@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\CityTravelHistory;
 use App\Models\Traveller;
+use Carbon\Carbon;
 
 class CityTravelHistoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get list of travle history for a user for given optional date period..
      *
      * @return \Illuminate\Http\Response
      */
@@ -58,8 +59,6 @@ class CityTravelHistoryController extends Controller
             });
         }
 
-        // dd($travel_history->toSql(), $travel_history->getBindings());
-
         if(isset($to_date) && !isset($from_date)) {
             $travel_history = $travel_history->where(function($query) use ($from_date, $to_date) {
                 $query->where('from_date', '<=', $to_date)
@@ -104,126 +103,93 @@ class CityTravelHistoryController extends Controller
 
     }
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'title' => 'required',
-    //         'description' => 'required',
-    //         'status' => 'required|in:o,h,c,s'
-    //     ], [
-    //         'title.required' => 'The title param value is required',
-    //         'description.required' => 'The description param value is required',
-    //         'status.required' => 'The status param value is required',
-    //         'status.in' => 'Incorrect status value',
-    //     ]);
 
-    //     if($validator->fails()) {
-    //         return response()->json([
-    //             "message" => $validator->errors()->first()
-    //         ]);
-    //     }
+    /**
+     * Get list of travle history for unique users with count for given date period.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUserCityTravelCount($from_date, $to_date)
+    {
+        $filter = [
+            'from_date' => $from_date,
+            'to_date' => $to_date
+        ];
 
-    //     // Get input values
-    //     $data = [
-    //         'td_title' => $request->input('title'),
-    //         'td_description' => $request->input('description'),
-    //         'td_status' => $request->input('status')
-    //     ];
+        $validator = Validator::make($filter, [
+            'from_date' => 'required|date_format:Y-m-d',
+            'to_date' => 'required|date_format:Y-m-d',
+        ], [
+            'from_date.date_format' => 'The from date format must be - YYYY-mm-dd',
+            'to_date.date_format' => 'The to date format must be - YYYY-mm-dd',
+        ]);
 
-    //     $todo = Todo::create($data);
 
-    //     return response()->json([
-    //         "message" => "Todo item successfully created",
-    //         "data"    => $todo
-    //     ], 201);
-    // }
+        if($validator->fails()) {
+            return response()->json([
+                "message" => $validator->errors()->first()
+            ]);
+        }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     if(Todo::where('td_id', $id)->exists()) {
-    //         $todo = Todo::where('td_id', $id)->get();
-    //     } else {
-    //         return response()->json([
-    //             "message" => "No todo item for the mentioned id",
-    //             "data" => []
-    //         ], 200);
-    //     }
+        $travel_history = CityTravelHistory::selectRaw("distinct cities.city_name as city_name, count(traveller_id) AS traveller_count");
 
-    //     return response()->json([
-    //         "message" => "success",
-    //         "data"    => $todo
-    //     ], 200);
-    // }
+        if(isset($from_date) && isset($to_date)) {
+            $travel_history = $travel_history->where(function($query) use ($from_date, $to_date) {
+                $query->where(function($query) use ($from_date, $to_date) {
+                    $query->where('from_date', '>=', $from_date)
+                    ->where('from_date', '<=', $to_date);
+                });
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'status' => 'required|in:o,h,c,s'
-    //     ], [
-    //         'status.in' => 'Incorrect status value',
-    //     ]);
+                $query->orWhere(function($query) use ($from_date, $to_date) {
+                    $query->where('to_date', '>=', $from_date)
+                    ->where('to_date', '<=', $to_date);
+                });
+            });
+        }
 
-    //     $data = [];
+        if(isset($to_date) && !isset($from_date)) {
+            $travel_history = $travel_history->where(function($query) use ($from_date, $to_date) {
+                $query->where('from_date', '<=', $to_date)
+                ->orWhere('to_date', '<=', $to_date);
+            });
+        }
 
-    //     if(!empty($request->input('title'))) $data['td_title'] = $request->input('title');
-    //     if(!empty($request->input('description'))) $data['td_description'] = $request->input('description');
-    //     if(!empty($request->input('status'))) $data['td_status'] = $request->input('status');
+        if(isset($from_date) && !isset($to_date)) {
+            $travel_history = $travel_history->where(function($query) use ($from_date, $to_date) {
+                $query->where('from_date', '<=', $from_date)
+                ->orWhere('to_date', '<=', $from_date);
+            });
+        }
 
-    //     if(Todo::where('td_id', $id)->exists()) {
-    //         Todo::where('td_id', $id)->update($data);
-    //     } else {
-    //         return response()->json([
-    //             "message" => "No todo item for the mentioned id",
-    //             "data" => []
-    //         ], 200);
-    //     }
+        $results = $travel_history->join('travelers', 'travelers.id', '=', 'traveller_id')
+        ->join('cities', 'cities.id', '=', 'city_id')
+        ->groupBy('city_name', 'traveller_id')->get();
 
-    //     $todo_data = Todo::where('td_id', $id)->get();
+        if(($results->count() > 0)) {
 
-    //     return response()->json([
-    //         "message" => "Todo item updated successfully",
-    //         "data"    => $todo_data
-    //     ], 200);
-    // }
+            $result_array = [];
 
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy($id)
-    // {
-    //     if(Todo::where('td_id', $id)->exists()) {
-    //         Todo::where('td_id', $id)->delete();
-    //     } else {
-    //         return response()->json([
-    //             "message" => "No todo item for the mentioned id",
-    //             "data" => []
-    //         ], 200);
-    //     }
+            foreach($results as $result) {
+                array_push($result_array, [
+                    'city_name' => $result->city_name,
+                    'traveller_count' => $result->traveller_count,
+                ]);
+            }
 
-    //     return response()->json([
-    //         "message" => "Todo item deleted successfully",
-    //     ], 200);
-    // }
-}
+            return response()->json([
+                "status" => "success",
+                "data"  => $result_array
+            ], 200);
+
+        } else {
+
+            return response()->json([
+                "status" => "success",
+                "data"    => []
+            ], 200);
+
+        }
+
+    }
+
+ }

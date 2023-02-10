@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1', 'namespace'=>'App\Http\Controllers'], function() {
+    Route::get('/travel_history/{travel_id}', 'CityTravelHistoryController@getUserCityTravelHistory');
+    Route::get('/travel_count/{from_date}/{to_date}', 'CityTravelHistoryController@getUserCityTravelCount');
 });
