@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Traveler;
 
-class TravelerSeeder extends Seeder
+class TravellerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -29,7 +29,7 @@ class TravelerSeeder extends Seeder
         ];
 
         foreach($traveller_data as $data) {
-            Traveler::create($data);
+            Traveller::create($data);
         }
 
         $this->command->info('End Traveller Seeder');
