@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('city_travel_history', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('traveller_id')->unsigned();
-            $table->bigInteger('city_id')->unsigned();
-            $table->timestamp('from_date')->nullable(false);
-            $table->timestamp('to_date')->nullable(false);
+            $table->bigInteger('traveller_id')->unsigned()->nullable(false);
+            $table->bigInteger('city_id')->unsigned()->nullable(false);
+            $table->date('from_date')->nullable(false);
+            $table->date('to_date')->nullable(false);
 
             $table->foreign('traveller_id')->references('id')->on('travelers');
             $table->foreign('city_id')->references('id')->on('cities');

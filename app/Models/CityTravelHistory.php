@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\City;
 
 class CityTravelHistory extends Model
 {
@@ -29,4 +30,9 @@ class CityTravelHistory extends Model
         'from_date',
         'to_date',
     ];
+
+    public function city() {
+        return $this->belongsTo(City::class, 'city_id', 'id');
+    }
+
 }

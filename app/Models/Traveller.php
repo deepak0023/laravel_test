@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Traveler extends Model
+class Traveller extends Model
 {
-    use HasFactory;
+    /**
+     * Table to be connected
+     */
+    protected $table = 'travellers';
 
     /**
      *  Disable created at and updated at timestamp

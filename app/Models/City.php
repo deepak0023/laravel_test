@@ -26,4 +26,9 @@ class City extends Model
         'id',
         'city_name',
     ];
+
+
+    public function cityTravelHistory() {
+        return $this->hasMany(CityTravelHistory::class, 'city_id', 'id');
+    }
 }
