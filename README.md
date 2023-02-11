@@ -1,3 +1,7 @@
+#### CI/CD status
+
+![example event parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+
 # Laravel Test
 
 This is a test project mainly for interview purpose :
