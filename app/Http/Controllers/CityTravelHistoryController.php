@@ -32,12 +32,13 @@ class CityTravelHistoryController extends Controller
 
         $rules = [
             'from_date' => 'date_format:Y-m-d',
-            'to_date' => 'date_format:Y-m-d',
+            'to_date' => 'date_format:Y-m-d|after_or_equal:from_date',
         ];
 
         $custom_error_message = [
             'from_date.date_format' => 'The from date format must be - YYYY-mm-dd',
             'to_date.date_format' => 'The to date format must be - YYYY-mm-dd',
+            'to_date.after_or_equal' => 'To-date must be grater than from date',
         ];
 
         $validator = $this->validateInput($input_data, $rules, $custom_error_message);
@@ -60,10 +61,10 @@ class CityTravelHistoryController extends Controller
             ], 404);
         }
 
-        // Perform logic
+        $from_date = !empty($input_data['from_date']) ? $input_data['from_date'] : null;
+        $to_date = !empty($input_data['to_date']) ? $input_data['to_date'] : null;
 
-        $from_date = $request->input('from_date') ?? null;
-        $to_date = $request->input('to_date') ?? null;
+        // Perform logic
 
         $travel_history = CityTravelHistory::where('traveller_id', $traveller_id);
 
@@ -139,11 +140,24 @@ class CityTravelHistoryController extends Controller
             ], 422);
         }
 
+        $from_date = Carbon::createFromFormat('Y-m-d', $from_date);
+        $to_date = Carbon::createFromFormat('Y-m-d',$to_date);
+
+        if($from_date->gt($to_date)) {
+            return response()->json([
+                "status"   => "error",
+                "errorCode" => "E003",
+                "message" => "To-date must be greater than from-date"
+            ], 422);
+        }
+
         // Perform logic
 
         $travel_history = CityTravelHistory::selectRaw("distinct cities.city_name as city_name, count(traveller_id) AS traveller_count");
 
-        $travel_history = $this->fliterDataBasedOnDate($travel_history, $from_date, $to_date);
+        $travel_history = $this->fliterDataBasedOnDate($travel_history,
+                                                    $from_date->format('Y-m-d'),
+                                                    $to_date->format('Y-m-d'));
 
         $results = $travel_history->join('travelers', 'travelers.id', '=', 'traveller_id')
         ->join('cities', 'cities.id', '=', 'city_id')

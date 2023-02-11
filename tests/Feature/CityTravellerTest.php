@@ -95,4 +95,23 @@ class CityTravellerTest extends TestCase
             ->assertStatus(422);
 
     }
+
+
+    /**
+     * Undocumented function
+     * @test
+     * @return void
+     */
+    public function check_failed_user_travel_history_with_from_date_greater_than_to_date()
+    {
+        $attributes = [
+            'traveller_id' => 1,
+            'from_date' => '2022-12-20',
+            'to_date' => '2022-12-10'
+        ];
+
+        $this->get(route('usercitytravelhistory', $attributes))
+            ->assertStatus(422);
+    }
+
 }

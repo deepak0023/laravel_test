@@ -62,4 +62,20 @@ class CityTravellerCountTest extends TestCase
         $this->get(route('usercitytravelcount', $attributes))
             ->assertStatus(422);
     }
+
+    /**
+     * A basic feature test example.
+     * @test
+     * @return void
+     */
+    public function check_falied_user_travel_history_with_from_date_gretaer_than_to_date()
+    {
+        $attributes = [
+            'from_date'  => '2022-12-25',
+            'to_date'     => '2022-12-15'
+        ];
+
+        $this->get(route('usercitytravelcount', $attributes))
+            ->assertStatus(422);
+    }
 }
