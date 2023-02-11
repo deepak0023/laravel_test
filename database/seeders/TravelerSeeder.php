@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Traveler;
 
-class TravellerSeeder extends Seeder
+class TravelerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,7 +16,7 @@ class TravellerSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->info('Start Traveller Seeder');
+        $this->command->info('Start Traveler Seeder');
 
         $traveller_data = [
             [
@@ -32,6 +32,6 @@ class TravellerSeeder extends Seeder
             Traveler::create($data);
         }
 
-        $this->command->info('End Traveller Seeder');
+        $this->command->info('End Traveler Seeder');
     }
 }

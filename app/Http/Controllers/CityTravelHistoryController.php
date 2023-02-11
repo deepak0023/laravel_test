@@ -15,10 +15,18 @@ class CityTravelHistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getUserCityTravelHistory($user_id, Request $request)
+    public function getUserCityTravelHistory($traveller_id, Request $request)
     {
 
         // Validate Input
+
+        if(!isset($traveller_id)) {
+            return response()->json([
+                "status" => "error",
+                "errorCode" => "E001",
+                "message" => "Traveller id value is mandatory"
+            ], 422);
+        }
 
         $input_data = $request->all();
 
@@ -42,7 +50,7 @@ class CityTravelHistoryController extends Controller
             ], 422);
         }
 
-        $traveller = Traveler::where('id', $user_id);
+        $traveller = Traveler::where('id', $traveller_id);
 
         if(!$traveller->exists()) {
             return response()->json([
@@ -57,7 +65,7 @@ class CityTravelHistoryController extends Controller
         $from_date = $request->input('from_date') ?? null;
         $to_date = $request->input('to_date') ?? null;
 
-        $travel_history = CityTravelHistory::where('traveller_id', $user_id);
+        $travel_history = CityTravelHistory::where('traveller_id', $traveller_id);
 
         $travel_history = $this->fliterDataBasedOnDate($travel_history, $from_date, $to_date);
 

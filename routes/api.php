@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1', 'namespace'=>'App\Http\Controllers'], function() {
-    Route::get('/travel_history/{travel_id}', 'CityTravelHistoryController@getUserCityTravelHistory');
-    Route::get('/travel_count/{from_date}/{to_date}', 'CityTravelHistoryController@getUserCityTravelCount');
+    Route::get('/travel_history/{traveller_id}', 'CityTravelHistoryController@getUserCityTravelHistory')->name('usercitytravelhistory');
+    Route::get('/travel_count/{from_date}/{to_date}', 'CityTravelHistoryController@getUserCityTravelCount')->name('usercitytravelcount');
 });
