@@ -4,6 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\CitySeeder;
+use Database\Seeders\TravelerSeeder;
+use Database\Seeders\CityTravelHistorySeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            CitySeeder::class,
+            TravelerSeeder::class,
+            CityTravelHistorySeeder::class
+        ]);
     }
 }

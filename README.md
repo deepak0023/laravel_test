@@ -32,13 +32,13 @@ This is a test project mainly for interview purpose :
    "data":[
       {
          "city_name":"Mumbai",
-         "from_date":"2022-12-22 10:10:10",
-         "to_date":"2022-12-23 10:10:10"
+         "from_date":"2022-12-22",
+         "to_date":"2022-12-23"
       },
       {
          "city_name":"Chennai",
-         "from_date":"2022-12-25 10:10:10",
-         "to_date":"2022-12-27 10:10:10"
+         "from_date":"2022-12-25",
+         "to_date":"2022-12-27"
       }
    ]
 }
