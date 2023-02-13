@@ -4,10 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\CitySeeder;
-use Database\Seeders\TravelerSeeder;
-use Database\Seeders\CityTravelHistorySeeder;
-
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,7 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CitySeeder::class,
             TravelerSeeder::class,
-            CityTravelHistorySeeder::class
+            CityTravelHistorySeeder::class,
         ]);
     }
 }

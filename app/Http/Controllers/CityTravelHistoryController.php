@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Validator;
 use App\Models\CityTravelHistory;
 use App\Models\Traveler;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Validator;
 
 class CityTravelHistoryController extends Controller
 {
@@ -20,11 +20,11 @@ class CityTravelHistoryController extends Controller
 
         // Validate Input
 
-        if(!isset($traveller_id)) {
+        if (!isset($traveller_id)) {
             return response()->json([
-                "status" => "error",
-                "errorCode" => "E001",
-                "message" => "Traveller id value is mandatory"
+                'status'    => 'error',
+                'errorCode' => 'E001',
+                'message'   => 'Traveller id value is mandatory',
             ], 422);
         }
 
@@ -32,32 +32,32 @@ class CityTravelHistoryController extends Controller
 
         $rules = [
             'from_date' => 'date_format:Y-m-d',
-            'to_date' => 'date_format:Y-m-d|after_or_equal:from_date',
+            'to_date'   => 'date_format:Y-m-d|after_or_equal:from_date',
         ];
 
         $custom_error_message = [
-            'from_date.date_format' => 'The from date format must be - YYYY-mm-dd',
-            'to_date.date_format' => 'The to date format must be - YYYY-mm-dd',
+            'from_date.date_format'  => 'The from date format must be - YYYY-mm-dd',
+            'to_date.date_format'    => 'The to date format must be - YYYY-mm-dd',
             'to_date.after_or_equal' => 'To-date must be grater than from date',
         ];
 
         $validator = $this->validateInput($input_data, $rules, $custom_error_message);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
-                "status" => "error",
-                "errorCode" => "E001",
-                "message" => $validator->errors()->first()
+                'status'    => 'error',
+                'errorCode' => 'E001',
+                'message'   => $validator->errors()->first(),
             ], 422);
         }
 
         $traveller = Traveler::where('id', $traveller_id);
 
-        if(!$traveller->exists()) {
+        if (!$traveller->exists()) {
             return response()->json([
-                "status"   => "error",
-                "errorCode" => "E002",
-                "message" => "No traveller with specified id"
+                'status'    => 'error',
+                'errorCode' => 'E002',
+                'message'   => 'No traveller with specified id',
             ], 404);
         }
 
@@ -74,34 +74,28 @@ class CityTravelHistoryController extends Controller
 
         // Display output based on result data
 
-        if(($results->count() > 0)) {
-
+        if (($results->count() > 0)) {
             $result_array = [];
 
-            foreach($results as $result) {
+            foreach ($results as $result) {
                 array_push($result_array, [
                     'city_name' => $result->city->city_name,
                     'from_date' => $result->from_date,
-                    'to_date' => $result->to_date
+                    'to_date'   => $result->to_date,
                 ]);
             }
 
             return response()->json([
-                "status" => "success",
-                "data"  => $result_array
+                'status' => 'success',
+                'data'   => $result_array,
             ], 200);
-
         } else {
-
             return response()->json([
-                "status" => "success",
-                "data"    => []
+                'status'  => 'success',
+                'data'    => [],
             ], 200);
-
         }
-
     }
-
 
     /**
      * Get list of travle history for unique users with count for given date period.
@@ -115,49 +109,51 @@ class CityTravelHistoryController extends Controller
 
         $input_data = [
             'from_date' => $from_date,
-            'to_date' => $to_date
+            'to_date'   => $to_date,
         ];
 
         $rules = [
             'from_date' => 'required|date_format:Y-m-d',
-            'to_date' => 'required|date_format:Y-m-d',
+            'to_date'   => 'required|date_format:Y-m-d',
         ];
 
         $custom_error_message = [
-            'from_date.required' => 'From-date Inputis mandatory',
-            'to_date.required' => 'To-date Inputis mandatory',
+            'from_date.required'    => 'From-date Inputis mandatory',
+            'to_date.required'      => 'To-date Inputis mandatory',
             'from_date.date_format' => 'The from date format must be - YYYY-mm-dd',
-            'to_date.date_format' => 'The to date format must be - YYYY-mm-dd',
+            'to_date.date_format'   => 'The to date format must be - YYYY-mm-dd',
         ];
 
         $validator = $this->validateInput($input_data, $rules, $custom_error_message);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
-                "status" => "error",
-                "errorCode" => "E001",
-                "message" => $validator->errors()->first()
+                'status'    => 'error',
+                'errorCode' => 'E001',
+                'message'   => $validator->errors()->first(),
             ], 422);
         }
 
         $from_date = Carbon::createFromFormat('Y-m-d', $from_date);
-        $to_date = Carbon::createFromFormat('Y-m-d',$to_date);
+        $to_date = Carbon::createFromFormat('Y-m-d', $to_date);
 
-        if($from_date->gt($to_date)) {
+        if ($from_date->gt($to_date)) {
             return response()->json([
-                "status"   => "error",
-                "errorCode" => "E003",
-                "message" => "To-date must be greater than from-date"
+                'status'    => 'error',
+                'errorCode' => 'E003',
+                'message'   => 'To-date must be greater than from-date',
             ], 422);
         }
 
         // Perform logic
 
-        $travel_history = CityTravelHistory::selectRaw("distinct cities.city_name as city_name, count(traveller_id) AS traveller_count");
+        $travel_history = CityTravelHistory::selectRaw('distinct cities.city_name as city_name, count(traveller_id) AS traveller_count');
 
-        $travel_history = $this->fliterDataBasedOnDate($travel_history,
-                                                    $from_date->format('Y-m-d'),
-                                                    $to_date->format('Y-m-d'));
+        $travel_history = $this->fliterDataBasedOnDate(
+            $travel_history,
+            $from_date->format('Y-m-d'),
+            $to_date->format('Y-m-d')
+        );
 
         $results = $travel_history->join('travelers', 'travelers.id', '=', 'traveller_id')
         ->join('cities', 'cities.id', '=', 'city_id')
@@ -165,86 +161,83 @@ class CityTravelHistoryController extends Controller
 
         // Display output based on result data
 
-        if(($results->count() > 0)) {
-
+        if (($results->count() > 0)) {
             $result_array = [];
 
-            foreach($results as $result) {
+            foreach ($results as $result) {
                 array_push($result_array, [
-                    'city_name' => $result->city_name,
+                    'city_name'       => $result->city_name,
                     'traveller_count' => $result->traveller_count,
                 ]);
             }
 
             return response()->json([
-                "status" => "success",
-                "data"  => $result_array
+                'status' => 'success',
+                'data'   => $result_array,
             ], 200);
-
         } else {
-
             return response()->json([
-                "status" => "success",
-                "data"    => []
+                'status'  => 'success',
+                'data'    => [],
             ], 200);
-
         }
-
     }
 
     /**
-     * Function to validate Input data based on rules
+     * Function to validate Input data based on rules.
      *
      * @param [type] $input_data
      * @param [type] $rules
      * @param [type] $custom_error
+     *
      * @return $validator object
      */
-    private function validateInput($input_data, $rules, $custom_error) {
-
+    private function validateInput($input_data, $rules, $custom_error)
+    {
         $validator = Validator::make($input_data, $rules, $custom_error);
 
         return $validator;
     }
 
     /**
-     * Function to filter the query based on from and to date
+     * Function to filter the query based on from and to date.
      *
      * @param [type] $query_connection
      * @param [type] $from_date
      * @param [type] $to_date
+     *
      * @return [updated] $query_connection object
      */
-    private function fliterDataBasedOnDate($query_connection, $from_date, $to_date) {
+    private function fliterDataBasedOnDate($query_connection, $from_date, $to_date)
+    {
+        switch (true) {
 
-        switch(true) {
+            case isset($from_date) && isset($to_date) :
 
-            case (isset($from_date) && isset($to_date)) :
-
-                $query_connection = $query_connection->where(function($query) use ($from_date, $to_date) {
-                    $query->where(function($query) use ($from_date, $to_date) {
+                $query_connection = $query_connection->where(function ($query) use ($from_date, $to_date) {
+                    $query->where(function ($query) use ($from_date, $to_date) {
                         $query->where('from_date', '>=', $from_date)
                         ->where('from_date', '<=', $to_date);
                     });
 
-                    $query->orWhere(function($query) use ($from_date, $to_date) {
+                    $query->orWhere(function ($query) use ($from_date, $to_date) {
                         $query->where('to_date', '>=', $from_date)
                         ->where('to_date', '<=', $to_date);
                     });
                 });
                 break;
 
-            case (!isset($from_date) && isset($to_date)) :
+            case !isset($from_date) && isset($to_date) :
 
-                $query_connection = $query_connection->where(function($query) use ($from_date, $to_date) {
+                $query_connection = $query_connection->where(function ($query) use ($to_date) {
                     $query->where('from_date', '<=', $to_date)
                     ->orWhere('to_date', '<=', $to_date);
                 });
                 break;
 
-            case (isset($from_date) && !isset($to_date)) :
+            case isset($from_date) && !isset($to_date) :
 
-                $query_connection = $query_connection->where(function($query) use ($from_date, $to_date) {
+                $query_connection = $query_connection->where(function ($query) use ($from_date) {
                     $query->where('from_date', '<=', $from_date)
                     ->orWhere('to_date', '<=', $from_date);
                 });
@@ -255,6 +248,4 @@ class CityTravelHistoryController extends Controller
 
         return $query_connection;
     }
- }
-
- ?>
+}
