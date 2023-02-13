@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'v1', 'namespace'=>'App\Http\Controllers'], function() {
+Route::group(['prefix' => 'v1', 'namespace'=>'App\Http\Controllers'], function () {
     Route::get('/travel_history/{traveller_id}', 'CityTravelHistoryController@getUserCityTravelHistory')->name('usercitytravelhistory');
     Route::get('/travel_count/{from_date}/{to_date}', 'CityTravelHistoryController@getUserCityTravelCount')->name('usercitytravelcount');
 });

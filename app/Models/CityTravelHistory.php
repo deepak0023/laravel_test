@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\City;
 
 class CityTravelHistory extends Model
 {
     /**
-     * Table to be connected
+     * Table to be connected.
      */
     protected $table = 'city_travel_history';
 
     /**
-     *  Disable created at and updated at timestamp
+     *  Disable created at and updated at timestamp.
      */
     public $timestamps = false;
 
@@ -31,8 +29,8 @@ class CityTravelHistory extends Model
         'to_date',
     ];
 
-    public function city() {
+    public function city()
+    {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
-
 }

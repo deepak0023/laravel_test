@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Traveler;
+use Illuminate\Database\Seeder;
 
 class TravelerSeeder extends Seeder
 {
@@ -20,15 +19,15 @@ class TravelerSeeder extends Seeder
 
         $traveller_data = [
             [
-                'traveller_name' => 'Deepak'
+                'traveller_name' => 'Deepak',
             ], [
-                'traveller_name' => 'Priya'
+                'traveller_name' => 'Priya',
             ], [
-                'traveller_name' => 'Arun'
-            ]
+                'traveller_name' => 'Arun',
+            ],
         ];
 
-        foreach($traveller_data as $data) {
+        foreach ($traveller_data as $data) {
             Traveler::create($data);
         }
 

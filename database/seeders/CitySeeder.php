@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\City;
+use Illuminate\Database\Seeder;
 
 class CitySeeder extends Seeder
 {
@@ -20,15 +19,15 @@ class CitySeeder extends Seeder
 
         $city_data = [
             [
-                'city_name' => 'Bangalore'
+                'city_name' => 'Bangalore',
             ], [
-                'city_name' => 'Mumbai'
+                'city_name' => 'Mumbai',
             ], [
-                'city_name' => 'Chennai'
-            ]
+                'city_name' => 'Chennai',
+            ],
         ];
 
-        foreach($city_data as $data) {
+        foreach ($city_data as $data) {
             City::create($data);
         }
 

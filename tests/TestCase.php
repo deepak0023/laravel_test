@@ -8,7 +8,8 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected function setup(): void {
+    protected function setup(): void
+    {
         parent::setup();
 
         $this->artisan('migrate');
