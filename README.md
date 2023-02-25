@@ -11,6 +11,7 @@ This is a test project mainly for interview purpose :
 - Generate key if not generated
 - run migration
 - Make changes in the corresponding db seeder and run specific seeder
+- CI unit testing added 
 
 ## API Endpoints Supported
 
