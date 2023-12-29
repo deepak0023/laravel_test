@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/deepak0023/laravel_test/laravel.yml)    ![Laravel Version](https://img.shields.io/badge/laravel-9.51-orange)
 
-# Laravel Test
+# Laravel Test Project
 
 This is a test project mainly for interview purpose :
 
