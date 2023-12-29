@@ -41,7 +41,7 @@ class CityTravellerCountTest extends TestCase
         ];
 
         $this->get(route('usercitytravelcount', $attributes))
-            ->assertStatus(200);
+            ->assertStatus(422);
 
         // Incorrect from-date format
 
